@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Index</title>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+</head>
+<body>
+	<button id="btn">获取token</button>
+	<button id="psource">获取受保护的资源</button>
+	<div id="requestInfo"></div>
+</body>
+
+
+<script type="text/javascript">
+
+$(function(){
+	var jwtToken = null;
+	$('#btn').click(function(){
+		jwtToken= doLogin('svlada@gmail.com','test1234');
+		console.log(jwtToken);
+		$('#requestInfo').html(JSON.stringify(jwtToken))
+	});
+	
+	$('#psource').click(function(){
+		if(jwtToken != null && jwtToken.token){
+			var result = getResources(jwtToken.token);
+			$('#requestInfo').html(JSON.stringify(result))
+		}
+		
+	});
+	
+	function doLogin(userName, password){
+		var result =null;
+		$.ajax({
+			url : 'http://localhost:9966/api/auth/login',
+			type : 'POST',
+			data : JSON.stringify({'username':userName,'password':password}),
+			async:false,
+			dataType : 'json',
+			success : function(data) {
+				result = data;
+			},
+			headers:{
+				'Content-Type':'application/json',
+				'Cache-Control':'no-cache',
+				'X-Requested-With':'XMLHttpRequest'
+			}, 
+			error : function(XMLRequest, textStatus, errorThrown) {
+				console.dir(XMLRequest)
+				console.dir(textStatus)
+				console.dir(errorThrown)
+			}
+		});
+		return result;
+	}
+	function getResources(token){
+		var result =null;
+		$.ajax({
+			url : 'http://localhost:9966/api/me',
+			type : 'GET',
+			async:false,
+			dataType : 'json',
+			success : function(data) {
+				result = data;
+			},
+			headers:{
+				'Authorization':'Bearer '+ token,
+				'Cache-Control':'no-cache',
+				'X-Requested-With':'XMLHttpRequest'
+			}, 
+			error : function(XMLRequest, textStatus, errorThrown) {
+				console.dir(XMLRequest)
+				console.dir(textStatus)
+				console.dir(errorThrown)
+			}
+		});
+		return result;
+	}
+});
+</script>
+</html>

@@ -1,0 +1,16 @@
+server.port: 9966
+spring.profiles: default
+demo.security.jwt:
+  tokenExpirationTime: 15
+  refreshTokenExpTime: 60
+  tokenIssuer: http://svlada.com
+  tokenSigningKey: xm8EV6Hy5RMFK4EEACIDAwQus
+spring.datasource:
+  url: jdbc:h2:mem:testdb
+  driverClassName: org.h2.Driver
+  username: sa
+  password: ''
+  data: classpath*:data.sql
+spring.jpa:
+  database-platform: org.hibernate.dialect.H2Dialect
+spring.h2.console.enabled: true
